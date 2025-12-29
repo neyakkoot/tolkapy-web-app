@@ -1,61 +1,68 @@
-from flask import Flask, request, render_template, jsonify 
-from tamilrulepy.meymayakkam import meymayakkam1,meymayakkam2,meymayakkam3,meymayakkam4,meymayakkam5,meymayakkam6,meymayakkam7,meymayakkam8,meymayakkam9,meymayakkam10,meymayakkam11,meymayakkam12,meymayakkam13,meymayakkam14,meymayakkam15,meymayakkam16,meymayakkam17,meymayakkam18
+import streamlit as st
 
-
-meymayakkam_rules = [
-    meymayakkam1,
-    meymayakkam2,
-    meymayakkam3,
-    meymayakkam4,
-    meymayakkam5,
-    meymayakkam6,
-    meymayakkam7,
-    meymayakkam8,
-    meymayakkam9,
-    meymayakkam10,
-    meymayakkam11,
-    meymayakkam12,
-    meymayakkam13,
-    meymayakkam14,
-    meymayakkam15,
-    meymayakkam16,
-    meymayakkam17,
-    meymayakkam18
-]
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/search')
-def search():
-    query = request.args.get('q')
-
-    return_data = []
+# -------------------------------------------------
+# 1. நூலக இறக்குமதி (Library Import)
+# -------------------------------------------------
+try:
+    import tamilrulepy
+    from tamilrulepy.meymayakkam import (
+        meymayakkam1, meymayakkam2, meymayakkam3, meymayakkam4, meymayakkam5,
+        meymayakkam6, meymayakkam7, meymayakkam8, meymayakkam9, meymayakkam10,
+        meymayakkam11, meymayakkam12, meymayakkam13, meymayakkam14, meymayakkam15,
+        meymayakkam16, meymayakkam17, meymayakkam18
+    )
     
-    for index,each_rule in enumerate(meymayakkam_rules):
-    
-        return_data.append(f"{index} ==> {each_rule(query)}")
+    # விதிகளை ஒரு பட்டியலில் சேர்த்தல்
+    meymayakkam_rules = [
+        meymayakkam1, meymayakkam2, meymayakkam3, meymayakkam4, meymayakkam5,
+        meymayakkam6, meymayakkam7, meymayakkam8, meymayakkam9, meymayakkam10,
+        meymayakkam11, meymayakkam12, meymayakkam13, meymayakkam14, meymayakkam15,
+        meymayakkam16, meymayakkam17, meymayakkam18
+    ]
+    status = True
+except Exception as e:
+    status = False
+    error_msg = str(e)
 
-    print(return_data)
-    return jsonify({
-        "status": "success",
-        "message": f"You searched for: {query}",
-        "data": return_data
-    })
+# -------------------------------------------------
+# 2. பக்க வடிவமைப்பு
+# -------------------------------------------------
+st.set_page_config(page_title="Tolkapy - மெய்ம்மயக்கம் ஆய்வு", layout="centered")
 
+st.title("📜 Tolkapy")
+st.subheader("தொல்காப்பிய மெய்ம்மயக்கம் ஆய்வு")
 
-@app.route('/analyze')
-def analyze():
-    query = request.args.get('q')
-    return f"<h1>Analysis Mode</h1><p>Analyzing data for: {query}</p>"
+if not status:
+    st.error(f"❌ நூலகத்தை ஏற்ற முடியவில்லை: {error_msg}")
+    st.info("requirements.txt கோப்பில் `git+https://gitlab.com/kachilug/tamilrulepy.git` உள்ளதா என உறுதி செய்யவும்.")
+    st.stop()
 
-@app.route('/generate')
-def generate():
-    query = request.args.get('q')
-    return f"<h1>Generation Mode</h1><p>Creating content for: {query}</p>"
+# -------------------------------------------------
+# 3. பயனர் உள்ளீடு
+# -------------------------------------------------
+word = st.text_input("தமிழ் சொல்லை உள்ளிடவும்", placeholder="உதா: தங்கம்")
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if st.button("🔍 விதிகளின்படி ஆராய்க"):
+    if not word.strip():
+        st.warning("⚠️ தயவுசெய்து ஒரு சொல்லை உள்ளிடவும்")
+    else:
+        st.write(f"### '{word}' - ஆய்வு முடிவுகள்:")
+        
+        results_found = False
+        
+        # 18 விதிகளையும் சரிபார்த்தல்
+        for i, rule_func in enumerate(meymayakkam_rules, 1):
+            try:
+                res = rule_func(word)
+                if res: # விதி பொருந்தினால்
+                    st.success(f"✅ **விதி {i}:** பொருந்துகிறது")
+                    st.info(f"விளக்கம்: {res}")
+                    results_found = True
+            except:
+                continue
+        
+        if not results_found:
+            st.warning("❌ இந்தச் சொல் மெய்ம்மயக்க விதிகளுக்கு உட்பட்டதாகத் தெரியவில்லை.")
+
+st.divider()
+st.caption("கணியம் அறக்கட்டளை | tamilrulepy project")
