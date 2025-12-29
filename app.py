@@ -1,110 +1,61 @@
-import streamlit as st
-try:
-    import tamilrulepy as tolkapy
-    from tamilrulepy import vidhikal
-    status = True
-except ImportError:
-    try:
-        import tolkapy
-        from tolkapy import vidhikal
-        status = True
-    except Exception as e:
-        status = False
-        error_msg = e
-# -------------------------------------------------
-# பக்க வடிவமைப்பு (Page Configuration)
-# -------------------------------------------------
-st.set_page_config(
-    page_title="Tolkapy | தொல்காப்பிய ஆய்வு",
-    page_icon="📜",
-    layout="wide"
-)
+from flask import Flask, request, render_template, jsonify 
+from tamilrulepy.meymayakkam import meymayakkam1,meymayakkam2,meymayakkam3,meymayakkam4,meymayakkam5,meymayakkam6,meymayakkam7,meymayakkam8,meymayakkam9,meymayakkam10,meymayakkam11,meymayakkam12,meymayakkam13,meymayakkam14,meymayakkam15,meymayakkam16,meymayakkam17,meymayakkam18
 
-# -------------------------------------------------
-# Tolkapy நூலகத்தை இறக்குமதி செய்தல்
-# -------------------------------------------------
-try:
-    import tolkapy
-    from tolkapy import vidhikal
-    status = True
-except Exception as e:
-    status = False
-    error_msg = e
 
-# -------------------------------------------------
-# பக்கத் தலைப்பு
-# -------------------------------------------------
-st.title("📜 Tolkapy (தொல்காப்பி)")
-st.subheader("தொல்காப்பிய இலக்கண விதி ஆய்வுக் கருவி")
-st.markdown("தமிழ் சொற்கள் தொல்காப்பிய விதிகளுக்கு உட்பட்டுள்ளனவா என்பதை ஆராய உதவும் ஒரு மென்பொருள்.")
-st.divider()
+meymayakkam_rules = [
+    meymayakkam1,
+    meymayakkam2,
+    meymayakkam3,
+    meymayakkam4,
+    meymayakkam5,
+    meymayakkam6,
+    meymayakkam7,
+    meymayakkam8,
+    meymayakkam9,
+    meymayakkam10,
+    meymayakkam11,
+    meymayakkam12,
+    meymayakkam13,
+    meymayakkam14,
+    meymayakkam15,
+    meymayakkam16,
+    meymayakkam17,
+    meymayakkam18
+]
 
-# ---------------- : Tolkapy கிடைக்கவில்லை எனில் : ----------------
-if not status:
-    st.error(f"❌ Tolkapy நூலகத்தை ஏற்ற முடியவில்லை: {error_msg}")
-    st.info("உங்களுடைய `requirements.txt` கோப்பில் `tolkapy` சரியாக உள்ளதா எனப் பார்க்கவும்.")
-    st.stop()
+app = Flask(__name__)
 
-# -------------------------------------------------
-# பக்கவாட்டுப் பட்டி (Sidebar)
-# -------------------------------------------------
-with st.sidebar:
-    st.header("⚙️ அமைப்புகள்")
-    rule = st.selectbox(
-        "ஆய்வு விதியைத் தேர்வு செய்யவும்",
-        [
-            "மெய்ம்மயக்கம் (Meimmayakkam)",
-            "மொழிமுதல் (Word Initial)",
-            "மொழியிறுதி (Word Final)",
-            "புணர்ச்சி (Sandhi - விரைவில்)"
-        ]
-    )
-    st.divider()
-    st.info("இந்தக் கருவி கணியம் அறக்கட்டளையின் Tolkapy திட்டத்தின் ஒரு பகுதியாகும்.")
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-# -------------------------------------------------
-# தரவு உள்ளீடு மற்றும் ஆய்வு
-# -------------------------------------------------
-col1, col2 = st.columns([1, 1])
+@app.route('/search')
+def search():
+    query = request.args.get('q')
 
-with col1:
-    word = st.text_input(
-        "🔤 தமிழ் சொல்லை உள்ளிடவும்:",
-        placeholder="உதா: தங்கம், கற்றல்"
-    )
-    analyse_btn = st.button("🔍 ஆராய்க")
+    return_data = []
+    
+    for index,each_rule in enumerate(meymayakkam_rules):
+    
+        return_data.append(f"{index} ==> {each_rule(query)}")
 
-with col2:
-    if analyse_btn:
-        if not word.strip():
-            st.warning("⚠️ தயவுசெய்து ஒரு தமிழ் சொல்லை உள்ளிடவும்")
-        else:
-            try:
-                st.write(f"### ஆய்வு முடிவு ({rule}):")
-                
-                if rule == "மெய்ம்மயக்கம் (Meimmayakkam)":
-                    result = vidhikal.meymayakkam_checker(word)
-                elif rule == "மொழிமுதல் (Word Initial)":
-                    result = vidhikal.mozhi_muthal_checker(word)
-                elif rule == "மொழியிறுதி (Word Final)":
-                    result = vidhikal.mozhi_iruthi_checker(word)
-                else:
-                    result = "இந்த வசதி இன்னும் சேர்க்கப்படவில்லை."
+    print(return_data)
+    return jsonify({
+        "status": "success",
+        "message": f"You searched for: {query}",
+        "data": return_data
+    })
 
-                # முடிவைக் காட்டுதல்
-                if result is True:
-                    st.success(f"✅ **'{word}'** — விதிக்கு ஏற்ப சரியாக உள்ளது!")
-                    st.balloons()
-                elif result is False:
-                    st.error(f"❌ **'{word}'** — விதிகளின்படி அமையவில்லை.")
-                else:
-                    st.warning(f"💡 தகவல்: {result}")
 
-            except Exception as e:
-                st.error(f"❌ ஆய்வின் போது பிழை ஏற்பட்டது: {e}")
+@app.route('/analyze')
+def analyze():
+    query = request.args.get('q')
+    return f"<h1>Analysis Mode</h1><p>Analyzing data for: {query}</p>"
 
-# -------------------------------------------------
-# அடிக்குறிப்பு (Footer)
-# -------------------------------------------------
-st.divider()
-st.caption("உருவாக்கம்: முனைவர் சத்தியராசு தங்கச்சாமியும் அவர்தம் Tolkapy குழுவினரும், கணியம் அறக்கட்டளை | [GitHub](https://github.com/neyakkoot/tolkapy-web-app)")
+@app.route('/generate')
+def generate():
+    query = request.args.get('q')
+    return f"<h1>Generation Mode</h1><p>Creating content for: {query}</p>"
+
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Search Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body class="bg-slate-900 flex items-center justify-center h-screen">
+
+    <div class="w-full max-w-2xl px-4">
+        <h1 class="text-white text-3xl font-bold mb-6 text-center">Flask Command Center</h1>
+           
+            <input type="text" id="userInput" placeholder="Type something..." 
+                class="flex-grow px-6 py-4 text-gray-700 focus:outline-none text-lg" required>
+
+            <div class="hidden md:block w-px bg-gray-200 my-3"></div>
+
+            <select id="pathSelector" 
+                class="bg-white px-4 py-4 text-gray-600 font-medium focus:outline-none cursor-pointer hover:text-blue-600 transition-colors">
+                <option value="/search">மெய்ம்மயக்கம்</option>
+                <option value="/analyze">மொழிமுதல்</option>
+                <option value="/generate">மொழியிறுதி</option>
+                <option value="/upload">புணர்ச்சி</option>
+            </select>
+
+            <button id="fetch-data-btn">Get Data from Server</button>
+
+
+        <div id="display-area">
+            <p>Data will appear here...</p>
+        </div>
+
+    </div>
+
+    <script>
+        $(document).ready(function() {
+    $('#fetch-data-btn').on('click', function(e) {
+        e.preventDefault();
+
+        // 1. Get the URL from the CORRECT id: pathSelector
+        const targetUrl = $('#pathSelector').val();
+
+        // 2. Get the user's text input
+        const userQuery = $('#userInput').val();
+
+        console.log("Sending request to:", targetUrl, "with data:", userQuery);
+
+        $.ajax({
+            url: targetUrl, 
+            method: 'GET',
+            dataType: 'json',
+            data: { q: userQuery }, // Sends ?q=your_text to Flask
+            success: function(response) {
+        // Clear the area
+        $('#display-area').empty();
+        
+        // Use 'response.message' to get the string from the Flask dictionary
+        const messageHtml = `<p class="text-white text-lg">${response.data}</p>`;
+        
+        // Display it
+        $('#display-area').html(messageHtml);
+    },
+            error: function(xhr, status, error) {
+                console.error("Error details:", xhr.responseText);
+                $('#display-area').html(`<p class="text-red-500">Error: ${status} - ${error}</p>`);
+            }
+        });
+    });
+});
+
+    /*
+      $(document).ready(function() {
+    
+        $('#fetch-data-btn').on('click', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: $('#category-select').val(), // Replace with your server URL
+            method: 'GET',
+            dataType: 'json',
+            data: { q : selectedCategory },
+            success: function(response) {
+               
+                $('#display-area').empty();
+                $('#display-area').html(response)
+               
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching data: ", error);
+                $('#display-area').html('<p style="color:red;">Failed to load data.</p>');
+            }
+        });
+    });
+});
+    */
+    </script>
+    
+</body>
+</html>
