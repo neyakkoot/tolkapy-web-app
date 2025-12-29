@@ -1,2 +1,2 @@
 streamlit
-tolkapy
+tolkapy==0.0.101
