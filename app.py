@@ -1,14 +1,16 @@
 import streamlit as st
 try:
-    import tolkapy
-    from tolkapy import vidhikal
+    import tamilrulepy as tolkapy
+    from tamilrulepy import vidhikal
     status = True
-except ModuleNotFoundError:
-    status = False
-    error_msg = "Tolkapy module library is not installed. Please check requirements.txt."
-except Exception as e:
-    status = False
-    error_msg = str(e)
+except ImportError:
+    try:
+        import tolkapy
+        from tolkapy import vidhikal
+        status = True
+    except Exception as e:
+        status = False
+        error_msg = e
 # -------------------------------------------------
 # பக்க வடிவமைப்பு (Page Configuration)
 # -------------------------------------------------
