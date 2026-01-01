@@ -87,6 +87,8 @@ st.markdown("""
         text-align: center;
         padding: 20px;
         color: #57606f;
+        border-radius: 8px !important;
+        border: 1px solid #dcdde1 !important;        
         font-size: 0.9rem;
     }
     </style>
