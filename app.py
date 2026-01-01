@@ -4,108 +4,93 @@ import importlib.util
 import os
 
 # 1. பக்க வடிவமைப்பு
-st.set_page_config(page_title="தொல்காபை ஆய்வி", layout="wide")
+st.set_page_config(page_title="தொல்காப்பி ஆய்வி", layout="wide")
 
-# --- Tholkaappiyam App போன்ற வடிவமைப்பு (CSS) ---
+# --- பின்னணிப் படம் மற்றும் அழகியல் வடிவமைப்பு (CSS) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@400;700&display=swap');
 
-    /* ஒட்டுமொத்த பின்னணி */
+    /* பின்னணிப் படத்தை முழுமையாக இணைத்தல் */
     .stApp {
-        background: #fdf2f8; /* மென்மையான இளஞ்சிவப்பு பின்னணி */
+        background: url("https://generated-image-url.com/your-image.png"); /* இங்கே உங்கள் படத்தின் URL-ஐ இடவும் */
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
         font-family: 'Mukta Malar', sans-serif;
     }
 
-    /* பிரதான தலைப்பு அட்டை */
+    /* பிரதான தலைப்பு அட்டை - கண்ணாடி போன்ற தோற்றம் */
     .main-title {
-        background: #ec4899; /* Pink color as per the reference */
+        background: rgba(236, 72, 153, 0.85); /* லேசான வெளிப்படைத்தன்மையுடன் கூடிய இளஞ்சிவப்பு */
         color: white;
         padding: 40px 20px;
-        border-radius: 0px 0px 30px 30px; /* கீழ்நோக்கிய வளைவு */
+        border-radius: 20px;
         text-align: center;
-        margin: -60px -20px 30px -20px;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        backdrop-filter: blur(10px); /* பின்னணியை மங்கலாக்கும் விளைவு */
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
     }
 
-    /* Tabs (தாவல்கள்) - App Bar போல */
+    /* Tabs (தாவல்கள்) வடிவமைப்பு */
     .stTabs [data-baseweb="tab-list"] {
         gap: 15px;
-        background-color: white;
+        background-color: rgba(255, 255, 255, 0.9);
         padding: 10px;
         border-radius: 15px;
         justify-content: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
 
     .stTabs [data-baseweb="tab"] {
-        background-color: transparent;
-        border-radius: 10px;
-        padding: 10px 20px;
         color: #ec4899;
         font-weight: bold;
-        border: none;
     }
 
     .stTabs [aria-selected="true"] {
         background-color: #fbcfe8 !important;
-        border-bottom: 3px solid #ec4899 !important;
+        border-radius: 10px;
     }
 
-    /* உள்ளீட்டுப் பெட்டிகள் மற்றும் அட்டைகள் */
-    .stTextInput input {
-        border-radius: 15px !important;
-        border: 2px solid #f9a8d4 !important;
-        padding: 12px !important;
-        background: white;
+    /* உள்ளடக்கப் பகுதி (Cards) */
+    .stMarkdown, .stTextInput, .stButton {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 15px;
     }
 
-    /* அழகான பொத்தான்கள் */
+    /* பொத்தான்கள் */
     div.stButton > button {
         background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
         color: white;
         border-radius: 15px;
-        width: 100%;
         border: none;
-        padding: 12px;
-        font-size: 18px;
         font-weight: bold;
-        box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3);
-        transition: 0.3s;
+        transition: 0.3s ease;
     }
 
     div.stButton > button:hover {
-        transform: scale(1.02);
-        box-shadow: 0 6px 15px rgba(236, 72, 153, 0.4);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         color: white;
-    }
-
-    /* ஆய்வு முடிவுகள் தோற்றம் */
-    .stAlert {
-        border-radius: 20px;
-        background-color: white !important;
-        border: 1px solid #fbcfe8 !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
     }
 
     /* அடிக்குறிப்பு */
     .footer {
         text-align: center;
-        padding: 25px;
-        background: white;
-        border-radius: 20px 20px 0 0;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
         margin-top: 50px;
         color: #9d174d;
         font-weight: bold;
-        box-shadow: 0 -5px 10px rgba(0,0,0,0.05);
     }
     </style>
     """, unsafe_allow_html=True)
 
 # --- தலைப்புப் பகுதி ---
-st.markdown('<div class="main-title"><h1>📜 தொல்காபை ஆய்வி</h1><p>Tolkapy Research Tool</p></div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title"><h1>📜 தொல்காப்பி ஆய்வி</h1><p>தமிழ் இலக்கண ஆய்வுத் தளம்</p></div>', unsafe_allow_html=True)
 
-# 2. விதிகள் ஏற்றம்
+# 2. விதிகள் ஏற்றம் (Dynamic Loading)
 def load_tolkapy_rules():
     try:
         base_path = os.path.dirname(tamilrulepy.__file__)
@@ -119,7 +104,7 @@ def load_tolkapy_rules():
 
 rules = load_tolkapy_rules()
 
-# 3. உள்ளடக்க அமைப்பு (Container)
+# 3. உள்ளடக்க அமைப்பு
 with st.container():
     tab1, tab2, tab3, tab4 = st.tabs(["🧩 மெய்ம்மயக்கம்", "🏁 மொழிமுதல்", "🔚 மொழியிறுதி", "🔗 புணர்ச்சி"])
 
@@ -161,14 +146,14 @@ with st.container():
         if st.button("புணர்க்க", key="b4"):
             if rules and hasattr(rules, 'punarchi_checker'):
                 res = rules.punarchi_checker(n_mozhi, v_mozhi)
-                st.success(f"**முடிவு:** {res}")
+                st.success(f"**புணர்ச்சி முடிவு:** {res}")
             else:
                 st.code(f"{n_mozhi} + {v_mozhi}")
 
 # --- அடிக்குறிப்பு ---
 st.markdown("""
     <div class="footer">
-        முனைவர் சத்தியராசு தங்கச்சாமி, பூபாலன் & குழுவினர்<br>
+        मुனைவர் சத்தியராசு தங்கச்சாமி, பூபாலன் & குழுவினர்<br>
         <span style="font-size: 0.8rem; font-weight: normal;">தமிழ் இலக்கணத் தரவுத் தளம் | 2026</span>
     </div>
     """, unsafe_allow_html=True)
