@@ -86,14 +86,14 @@ st.markdown("""
     .footer {
         text-align: center;
         padding: 20px;
-        color: #7f8c8d;
+        color: #57606f;
         font-size: 0.9rem;
     }
     </style>
     """, unsafe_allow_html=True)
 
 # --- தலைப்புப் பகுதி ---
-st.markdown('<div class="main-title"><h1>📜 Tolkapy (தொல்காப்பி)</h1><p>தமிழ் இலக்கண ஆய்வுத் தளம்</p></div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title"><h1>📜 தொல்காபை ஆய்வி (Tolkapy Research Tool)</h1><p>தமிழ் இலக்கண ஆய்வுக் கருவி</p></div>', unsafe_allow_html=True)
 
 # 2. vidhikal.py கோப்பைத் தேடி இறக்குதல் (Dynamic Loading)
 def load_tolkapy_rules():
