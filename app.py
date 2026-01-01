@@ -4,7 +4,7 @@ import importlib.util
 import os
 
 # 1. பக்க வடிவமைப்பு
-st.set_page_config(page_title="தொல்காப்பி ஆய்வி", layout="wide")
+st.set_page_config(page_title="தொல்காபை ஆய்வி", layout="wide")
 
 # --- Tholkaappiyam App போன்ற வடிவமைப்பு (CSS) ---
 st.markdown("""
@@ -103,7 +103,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- தலைப்புப் பகுதி ---
-st.markdown('<div class="main-title"><h1>📜 தொல்காப்பி ஆய்வி</h1><p>Tholkaappiyam Research Tool</p></div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title"><h1>📜 தொல்காபை ஆய்வி</h1><p>Tolkapy Research Tool</p></div>', unsafe_allow_html=True)
 
 # 2. விதிகள் ஏற்றம்
 def load_tolkapy_rules():
@@ -169,6 +169,6 @@ with st.container():
 st.markdown("""
     <div class="footer">
         முனைவர் சத்தியராசு தங்கச்சாமி, பூபாலன் & குழுவினர்<br>
-        <span style="font-size: 0.8rem; font-weight: normal;">தமிழ் இலக்கணத் தரவுத் தளம் | 2025</span>
+        <span style="font-size: 0.8rem; font-weight: normal;">தமிழ் இலக்கணத் தரவுத் தளம் | 2026</span>
     </div>
     """, unsafe_allow_html=True)
