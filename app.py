@@ -72,7 +72,7 @@ st.markdown("""
 # குறிப்பு: images/தொல்காப்பியர்.jpg உங்கள் கணினியில் சரியான பாதையில் இருப்பதை உறுதி செய்யவும்
 st.markdown(f"""
     <div class="main-title-container">
-        <img src="images/tolkaapiyar.jpg" class="thol-image">
+        <img src="main/tolkaapiyar.jpg" class="thol-image">
         <h1>📜 தொல்காபை ஆய்வி</h1>
         <p>Tolkapy Research Tool</p>
     </div>
