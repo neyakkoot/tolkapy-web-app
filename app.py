@@ -24,13 +24,6 @@ rules, status = load_tolkapy_rules()
 # 2. பக்க வடிவமைப்பு
 st.set_page_config(page_title="தொல்காபை ஆய்வி", layout="wide")
 st.title("📜 Tolkapy (தொல்காபை)🖋️")
-import streamlit as st
-import tamilrulepy
-import importlib.util
-import os
-
-# 1. பக்க வடிவமைப்பு (முதலில் அமைக்க வேண்டும்)
-st.set_page_config(page_title="தொல்காப்பி ஆய்வு", layout="wide")
 
 # --- CSS வடிவமைப்பு தொடக்கம் ---
 st.markdown("""
