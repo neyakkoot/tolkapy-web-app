@@ -3,101 +3,109 @@ import tamilrulepy
 import importlib.util
 import os
 
-# 1. பக்க வடிவமைப்பு மற்றும் தலைப்பு அமைத்தல்
-st.set_page_config(page_title="தொல்காபை ஆய்வி", layout="wide")
+# 1. பக்க வடிவமைப்பு
+st.set_page_config(page_title="தொல்காப்பி ஆய்வி", layout="wide")
 
-# --- நவீன CSS வடிவமைப்பு ---
+# --- Tholkaappiyam App போன்ற வடிவமைப்பு (CSS) ---
 st.markdown("""
     <style>
-    /* தமிழ் எழுத்துரு இறக்குமதி */
     @import url('https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@400;700&display=swap');
 
-    /* ஒட்டுமொத்த உடல் பகுதி */
+    /* ஒட்டுமொத்த பின்னணி */
     .stApp {
-        background-color: #f9f7f2;
+        background: #fdf2f8; /* மென்மையான இளஞ்சிவப்பு பின்னணி */
         font-family: 'Mukta Malar', sans-serif;
     }
 
-    /* பிரதான தலைப்பு (Tolkapy) */
+    /* பிரதான தலைப்பு அட்டை */
     .main-title {
-        background: linear-gradient(90deg, #2c3e50, #4a69bd);
+        background: #ec4899; /* Pink color as per the reference */
         color: white;
-        padding: 30px;
-        border-radius: 15px;
+        padding: 40px 20px;
+        border-radius: 0px 0px 30px 30px; /* கீழ்நோக்கிய வளைவு */
         text-align: center;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        margin: -60px -20px 30px -20px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
 
-    /* Tabs (தாவல்கள்) வடிவமைப்பு */
+    /* Tabs (தாவல்கள்) - App Bar போல */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: #ffffff;
+        gap: 15px;
+        background-color: white;
         padding: 10px;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        border-radius: 15px;
+        justify-content: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
 
     .stTabs [data-baseweb="tab"] {
-        background-color: #f1f2f6;
-        border-radius: 8px;
-        padding: 12px 25px;
+        background-color: transparent;
+        border-radius: 10px;
+        padding: 10px 20px;
+        color: #ec4899;
         font-weight: bold;
-        color: #57606f;
+        border: none;
     }
 
     .stTabs [aria-selected="true"] {
-        background-color: #e67e22 !important;
-        color: white !important;
+        background-color: #fbcfe8 !important;
+        border-bottom: 3px solid #ec4899 !important;
     }
 
-    /* பொத்தான்கள் (Buttons) */
+    /* உள்ளீட்டுப் பெட்டிகள் மற்றும் அட்டைகள் */
+    .stTextInput input {
+        border-radius: 15px !important;
+        border: 2px solid #f9a8d4 !important;
+        padding: 12px !important;
+        background: white;
+    }
+
+    /* அழகான பொத்தான்கள் */
     div.stButton > button {
-        background-color: #2c3e50;
+        background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
         color: white;
-        border-radius: 8px;
+        border-radius: 15px;
         width: 100%;
         border: none;
-        padding: 10px;
+        padding: 12px;
+        font-size: 18px;
         font-weight: bold;
+        box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3);
         transition: 0.3s;
     }
 
     div.stButton > button:hover {
-        background-color: #e67e22;
+        transform: scale(1.02);
+        box-shadow: 0 6px 15px rgba(236, 72, 153, 0.4);
         color: white;
-        transform: translateY(-2px);
     }
 
-    /* உள்ளீட்டு பெட்டிகள் */
-    .stTextInput input {
-        border-radius: 8px !important;
-        border: 1px solid #dcdde1 !important;
-    }
-
-    /* முடிவுகள் (Success/Info) */
+    /* ஆய்வு முடிவுகள் தோற்றம் */
     .stAlert {
-        border-radius: 12px;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border-radius: 20px;
+        background-color: white !important;
+        border: 1px solid #fbcfe8 !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
     }
 
-    /* அடிக்குறிப்பு (Footer) */
+    /* அடிக்குறிப்பு */
     .footer {
         text-align: center;
-        padding: 20px;
-        color: #57606f;
-        border-radius: 8px !important;
-        border: 1px solid #dcdde1 !important;        
-        font-size: 0.9rem;
+        padding: 25px;
+        background: white;
+        border-radius: 20px 20px 0 0;
+        margin-top: 50px;
+        color: #9d174d;
+        font-weight: bold;
+        box-shadow: 0 -5px 10px rgba(0,0,0,0.05);
     }
     </style>
     """, unsafe_allow_html=True)
 
 # --- தலைப்புப் பகுதி ---
-st.markdown('<div class="main-title"><h1>📜 தொல்காபை ஆய்வி (Tolkapy Research Tool)</h1><p>தமிழ் இலக்கண ஆய்வுக் கருவி</p></div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title"><h1>📜 தொல்காப்பி ஆய்வி</h1><p>Tholkaappiyam Research Tool</p></div>', unsafe_allow_html=True)
 
-# 2. vidhikal.py கோப்பைத் தேடி இறக்குதல் (Dynamic Loading)
+# 2. விதிகள் ஏற்றம்
 def load_tolkapy_rules():
     try:
         base_path = os.path.dirname(tamilrulepy.__file__)
@@ -111,63 +119,56 @@ def load_tolkapy_rules():
 
 rules = load_tolkapy_rules()
 
-# 3. தாவல்கள் (Tabs) அமைத்தல்
-tab1, tab2, tab3, tab4 = st.tabs(["🧩 மெய்ம்மயக்கம்", "🏁 மொழிமுதல்", "🔚 மொழியிறுதி", "🔗 புணர்ச்சி"])
+# 3. உள்ளடக்க அமைப்பு (Container)
+with st.container():
+    tab1, tab2, tab3, tab4 = st.tabs(["🧩 மெய்ம்மயக்கம்", "🏁 மொழிமுதல்", "🔚 மொழியிறுதி", "🔗 புணர்ச்சி"])
 
-# --- TAB 1: மெய்ம்மயக்கம் ---
-with tab1:
-    st.subheader("மெய்ம்மயக்கம் ஆய்வு")
-    word_m = st.text_input("சொல்லை உள்ளிடவும்:", key="m1", placeholder="எ.கா: கற்க")
-    if st.button("ஆராய்க", key="b1"):
-        if rules and hasattr(rules, 'meymayakkam_checker'):
-            res = rules.meymayakkam_checker(word_m)
-            st.success(f"**முடிவு:** {res}")
-        else:
-            st.error("விதித் தொகுப்பு (Rules) கண்டறியப்படவில்லை.")
+    with tab1:
+        st.markdown("### மெய்ம்மயக்கம் ஆய்வு")
+        word_m = st.text_input("சொல்லை உள்ளிடவும்:", key="m1", placeholder="எ.கா: கற்க")
+        if st.button("ஆராய்க", key="b1"):
+            if rules and hasattr(rules, 'meymayakkam_checker'):
+                res = rules.meymayakkam_checker(word_m)
+                st.success(f"**முடிவு:** {res}")
+            else:
+                st.error("விதித் தொகுப்பு கண்டறியப்படவில்லை.")
 
-# --- TAB 2: மொழிமுதல் ---
-with tab2:
-    st.subheader("மொழிமுதல் ஆய்வு")
-    word_f = st.text_input("சொல்லை உள்ளிடவும்:", key="f1", placeholder="எ.கா: தந்தை")
-    if st.button("சரிபார்", key="b2"):
-        if rules and hasattr(rules, 'mozhi_muthal_checker'):
-            res = rules.mozhi_muthal_checker(word_f)
-            st.info(f"**ஆய்வு முடிவு:** {res}")
-        else:
-            st.warning("மொழிமுதல் விதிச் செயல்பாடுகள் கண்டறியப்படவில்லை.")
+    with tab2:
+        st.markdown("### மொழிமுதல் ஆய்வு")
+        word_f = st.text_input("சொல்லை உள்ளிடவும்:", key="f1", placeholder="எ.கா: தந்தை")
+        if st.button("சரிபார்", key="b2"):
+            if rules and hasattr(rules, 'mozhi_muthal_checker'):
+                res = rules.mozhi_muthal_checker(word_f)
+                st.info(f"**ஆய்வு முடிவு:** {res}")
+            else:
+                st.warning("மொழிமுதல் விதிச் செயல்பாடுகள் இல்லை.")
 
-# --- TAB 3: மொழியிறுதி ---
-with tab3:
-    st.header("மொழியிறுதி ஆய்வு")
-    word_e = st.text_input("சொல்லை உள்ளிடவும்:", key="e1", placeholder="எ.கா: மரம்")
-    if st.button("சரிபார்", key="b3"):
-        if rules and hasattr(rules, 'mozhi_iruthi_checker'):
-            res = rules.mozhi_iruthi_checker(word_e)
-            st.info(f"**ஆய்வு முடிவு:** {res}")
-        else:
-            st.warning("மொழியிறுதி விதிச் செயல்பாடுகள் கண்டறியப்படவில்லை.")
+    with tab3:
+        st.markdown("### மொழியிறுதி ஆய்வு")
+        word_e = st.text_input("சொல்லை உள்ளிடவும்:", key="e1", placeholder="எ.கா: மரம்")
+        if st.button("சரிபார்", key="b3"):
+            if rules and hasattr(rules, 'mozhi_iruthi_checker'):
+                res = rules.mozhi_iruthi_checker(word_e)
+                st.info(f"**ஆய்வு முடிவு:** {res}")
+            else:
+                st.warning("மொழியிறுதி விதிச் செயல்பாடுகள் இல்லை.")
 
-# --- TAB 4: புணர்ச்சி ---
-with tab4:
-    st.header("புணர்ச்சி ஆய்வு")
-    col1, col2 = st.columns(2)
-    with col1: 
-        n_mozhi = st.text_input("நிலைமொழி:", key="n1", placeholder="எ.கா: பனை")
-    with col2: 
-        v_mozhi = st.text_input("வருமொழி:", key="v1", placeholder="எ.கா: காய்")
-    
-    if st.button("புணர்க்க", key="b4"):
-        if rules and hasattr(rules, 'punarchi_checker'):
-            res = rules.punarchi_checker(n_mozhi, v_mozhi)
-            st.success(f"**புணர்ச்சி முடிவு:** {res}")
-        else:
-            st.code(f"{n_mozhi} + {v_mozhi}")
-            st.write("குறிப்பு: நூலகத்தில் புணர்ச்சி விதிகள் மேம்படுத்தப்படுகின்றன.")
+    with tab4:
+        st.markdown("### புணர்ச்சி ஆய்வு")
+        col1, col2 = st.columns(2)
+        with col1: n_mozhi = st.text_input("நிலைமொழி:", key="n1")
+        with col2: v_mozhi = st.text_input("வருமொழி:", key="v1")
+        if st.button("புணர்க்க", key="b4"):
+            if rules and hasattr(rules, 'punarchi_checker'):
+                res = rules.punarchi_checker(n_mozhi, v_mozhi)
+                st.success(f"**முடிவு:** {res}")
+            else:
+                st.code(f"{n_mozhi} + {v_mozhi}")
 
 # --- அடிக்குறிப்பு ---
 st.markdown("""
     <div class="footer">
-        <hr>
-        முனைவர் சத்தியராசு தங்கச்சாமி, பூபாலன் & குழுவினர் | தமிழ் இலக்கணத் தரவுத் தளம்
+        முனைவர் சத்தியராசு தங்கச்சாமி, பூபாலன் & குழுவினர்<br>
+        <span style="font-size: 0.8rem; font-weight: normal;">தமிழ் இலக்கணத் தரவுத் தளம் | 2025</span>
     </div>
     """, unsafe_allow_html=True)
