@@ -22,9 +22,89 @@ def load_tolkapy_rules():
 rules, status = load_tolkapy_rules()
 
 # 2. பக்க வடிவமைப்பு
-st.set_page_config(page_title="தொல்காப்பி ஆய்வு", layout="wide")
-st.title("📜 Tolkapy (தொல்காப்பி)")
+st.set_page_config(page_title="தொல்காபை ஆய்வி", layout="wide")
+st.title("📜 Tolkapy (தொல்காபை)🖋️")
+import streamlit as st
+import tamilrulepy
+import importlib.util
+import os
 
+# 1. பக்க வடிவமைப்பு (முதலில் அமைக்க வேண்டும்)
+st.set_page_config(page_title="தொல்காப்பி ஆய்வு", layout="wide")
+
+# --- CSS வடிவமைப்பு தொடக்கம் ---
+st.markdown("""
+    <style>
+    /* கூகுள் தமிழ் எழுத்துரு */
+    @import url('https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@400;700&display=swap');
+
+    html, body, [class*="css"] {
+        font-family: 'Mukta Malar', sans-serif;
+    }
+
+    /* பிரதான பின்னணி */
+    .main {
+        background-color: #fcfaf5;
+    }
+
+    /* தலைப்புப் பகுதி */
+    .stTitle {
+        color: #2c3e50;
+        text-align: center;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border-bottom: 5px solid #e67e22;
+    }
+
+    /* Tabs (தாவல்கள்) வடிவமைப்பு */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+        background-color: transparent;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        background-color: #f1f2f6;
+        border-radius: 10px 10px 0px 0px;
+        padding: 10px 20px;
+        font-weight: bold;
+    }
+
+    .stTabs [aria-selected="true"] {
+        background-color: #e67e22 !important;
+        color: white !important;
+    }
+
+    /* உள்ளீடு மற்றும் பொத்தான்கள் */
+    .stButton button {
+        background-color: #2c3e50 !important;
+        color: white !important;
+        border-radius: 8px !important;
+        border: none !important;
+        transition: 0.3s ease;
+    }
+
+    .stButton button:hover {
+        background-color: #e67e22 !important;
+        transform: scale(1.02);
+    }
+
+    /* முடிவு காட்டும் பெட்டிகள் */
+    .stSuccess, .stInfo {
+        border-radius: 10px;
+        border-left: 5px solid #27ae60;
+    }
+    
+    </style>
+    """, unsafe_allow_html=True)
+# --- CSS வடிவமைப்பு முடிவு ---
+
+# மீதமுள்ள உங்கள் குறியீட்டை இங்கே தொடரவும்...
+def load_tolkapy_rules():
+    # (உங்கள் பழைய குறியீடு அப்படியே இருக்கட்டும்)
+    
 # நூலகம் லோட் ஆகவில்லை என்றால் எச்சரிக்கை காட்டும்
 if rules is None:
     st.error(f"நூலகத்தை ஏற்றுவதில் சிக்கல்: {status}")
