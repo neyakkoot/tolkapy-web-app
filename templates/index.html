@@ -7,94 +7,86 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
-<body class="bg-slate-900 flex items-center justify-center h-screen">
 
-    <div class="w-full max-w-2xl px-4">
-        <h1 class="text-white text-3xl font-bold mb-6 text-center">Flask Command Center</h1>
-           
-            <input type="text" id="userInput" placeholder="Type something..." 
-                class="flex-grow px-6 py-4 text-gray-700 focus:outline-none text-lg" required>
+<body class="bg-slate-900 flex items-center justify-center min-h-screen">
 
-            <div class="hidden md:block w-px bg-gray-200 my-3"></div>
-
-            <select id="pathSelector" 
-                class="bg-white px-4 py-4 text-gray-600 font-medium focus:outline-none cursor-pointer hover:text-blue-600 transition-colors">
-                <option value="/search">மெய்ம்மயக்கம்</option>
-                <option value="/analyze">மொழிமுதல்</option>
-                <option value="/generate">மொழியிறுதி</option>
-                <option value="/upload">புணர்ச்சி</option>
-            </select>
-
-            <button id="fetch-data-btn">Get Data from Server</button>
-
-
-        <div id="display-area">
-            <p>Data will appear here...</p>
+    <div class="w-full max-w-4xl px-4">
+        <div class="text-center mb-10">
+            <h1 class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 text-5xl font-extrabold mb-2">
+                Tamil Linguistic Analysis Portal
+            </h1>
         </div>
 
+        <div class="bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden border-4 border-slate-800">
+            
+            <input type="text" id="userInput" placeholder="Enter Tamil text..." 
+                class="flex-grow px-8 py-5 text-gray-700 focus:outline-none text-xl placeholder:text-slate-300">
+
+            <div class="hidden md:block w-px bg-gray-100 my-4"></div>
+
+            <select id="pathSelector" 
+                class="bg-white px-6 py-5 text-slate-600 font-semibold focus:outline-none cursor-pointer hover:text-blue-600 transition-colors text-base appearance-none border-t md:border-t-0 border-gray-100">
+                <option value="/search">மெய்ம்மயக்கம் (Consonant Cluster)</option>
+                <option value="/analyze">மொழிமுதல் (Word Start)</option>
+                <option value="/generate">மொழியிறுதி (Word End)</option>
+                <option value="/upload">புணர்ச்சி (Sandhi)</option>
+            </select>
+
+            <button id="fetch-data-btn" 
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-10 py-5 transition-all active:scale-95 flex items-center justify-center gap-2">
+                <span>Analyze</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="mt-8">
+            <div id="display-area" class="bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-xl p-8 min-h-[150px] transition-all">
+                <div class="flex flex-col items-center justify-center h-full text-slate-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-3 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <p class="text-center italic">Analysis results will be streamed here...</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
+</body>
+<script>
+    $(document).ready(function() {
     $('#fetch-data-btn').on('click', function(e) {
         e.preventDefault();
-
-        // 1. Get the URL from the CORRECT id: pathSelector
-        const targetUrl = $('#pathSelector').val();
-
-        // 2. Get the user's text input
-        const userQuery = $('#userInput').val();
-
-        console.log("Sending request to:", targetUrl, "with data:", userQuery);
+        
+        $('#display-area').addClass('opacity-50');
 
         $.ajax({
-            url: targetUrl, 
+            url: $('#pathSelector').val(),
             method: 'GET',
             dataType: 'json',
-            data: { q: userQuery }, // Sends ?q=your_text to Flask
+            data: { q: $('#userInput').val() },
             success: function(response) {
-        // Clear the area
-        $('#display-area').empty();
-        
-        // Use 'response.message' to get the string from the Flask dictionary
-        const messageHtml = `<p class="text-white text-lg">${response.data}</p>`;
-        
-        // Display it
-        $('#display-area').html(messageHtml);
-    },
-            error: function(xhr, status, error) {
-                console.error("Error details:", xhr.responseText);
-                $('#display-area').html(`<p class="text-red-500">Error: ${status} - ${error}</p>`);
-            }
-        });
-    });
-});
-
-    /*
-      $(document).ready(function() {
-    
-        $('#fetch-data-btn').on('click', function(e) {
-        e.preventDefault();
-        $.ajax({
-            url: $('#category-select').val(), // Replace with your server URL
-            method: 'GET',
-            dataType: 'json',
-            data: { q : selectedCategory },
-            success: function(response) {
-               
-                $('#display-area').empty();
-                $('#display-area').html(response)
-               
+                $('#display-area').removeClass('opacity-50').empty();
+                
+                const htmlContent = `
+                    <div class="animate-fade-in">
+                        <h3 class="text-emerald-400 font-bold mb-2 text-sm uppercase tracking-widest">Analysis Result</h3>
+                        <p class="text-white text-2xl font-light">${response.data}</p>
+                    </div>
+                `;
+                $('#display-area').html(htmlContent);
             },
-            error: function(xhr, status, error) {
-                console.error("Error fetching data: ", error);
-                $('#display-area').html('<p style="color:red;">Failed to load data.</p>');
+            error: function(xhr) {
+                $('#display-area').removeClass('opacity-50').empty();
+                $('#display-area').html(`
+                    <div class="text-red-400 border border-red-900/50 bg-red-900/20 p-4 rounded-lg">
+                        <strong>Error:</strong> ${xhr.statusText}
+                    </div>
+                `);
             }
         });
     });
 });
-    */
-    </script>
-    
-</body>
+</script>
 </html>
