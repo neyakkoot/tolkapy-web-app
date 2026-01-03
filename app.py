@@ -1,5 +1,5 @@
 import streamlit as st
-import tamilrulepy
+from tolkapy import meymayakkam
 import importlib.util
 import os
 
@@ -110,23 +110,6 @@ st.markdown(f"""
     </div>
     """, unsafe_allow_html=True)
 
-# 2. விதிகள் ஏற்றம் (Safe Loading)
-@st.cache_resource
-def load_tolkapy_rules():
-    try:
-        base_path = os.path.dirname(tamilrulepy.__file__)
-        vidhikal_path = os.path.join(base_path, "vidhikal.py")
-        if os.path.exists(vidhikal_path):
-            spec = importlib.util.spec_from_file_location("vidhikal", vidhikal_path)
-            mod = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(mod)
-            return mod
-        return None
-    except:
-        return None
-
-rules = load_tolkapy_rules()
-
 # 3. பிரதான உள்ளடக்கப் பகுதி
 tab1, tab2, tab3, tab4 = st.tabs([
     "🧩 மெய்ம்மயக்கம்", 
@@ -150,7 +133,7 @@ with tab1:
         
     if btn1:
         if rules and hasattr(rules, 'meymayakkam_checker'):
-            res = rules.meymayakkam_checker(word_m)
+            res = meymayakkam.meymayakkam1(word_m)
             display_result(res)
         else:
             st.error("இலக்கண விதியகம் (vidhikal.py) கண்டறியப்படவில்லை.")
