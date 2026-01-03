@@ -109,7 +109,7 @@ st.markdown(f"""
         <p style="opacity: 0.9; font-size: 1.1rem;">Tolkapy Grammar Analysis Tool</p>
     </div>
     """, unsafe_allow_html=True)
-
+res = meymayakkam.meymayakkam1(word_m)
 # 3. பிரதான உள்ளடக்கப் பகுதி
 tab1, tab2, tab3, tab4 = st.tabs([
     "🧩 மெய்ம்மயக்கம்", 
@@ -132,11 +132,9 @@ with tab1:
         btn1 = st.button("ஆராய்க", key="b1", use_container_width=True)
         
     if btn1:
-        if rules and hasattr(rules, 'meymayakkam_checker'):
-            res = meymayakkam.meymayakkam1(word_m)
-            display_result(res)
-        else:
-            st.error("இலக்கண விதியகம் (vidhikal.py) கண்டறியப்படவில்லை.")
+        display_result(res)
+    else:
+        st.error("இலக்கண விதியகம் (vidhikal.py) கண்டறியப்படவில்லை.")
 
 with tab2:
     st.subheader("மொழிமுதல் எழுத்து ஆய்வு")
