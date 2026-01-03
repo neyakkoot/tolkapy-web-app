@@ -1,7 +1,23 @@
 import streamlit as st
-from tolkapy import meymayakkam
 import importlib.util
 import os
+
+from tamilrulepy.meymayakkam import meymayakkam1,meymayakkam2,meymayakkam3,meymayakkam4,meymayakkam5,meymayakkam6,meymayakkam7,meymayakkam8,meymayakkam9,meymayakkam10,meymayakkam11,meymayakkam12,meymayakkam13,meymayakkam14,meymayakkam15,meymayakkam16,meymayakkam17,meymayakkam18
+
+from tamilrulepy.mozhimarabu.word_starting import (
+    uyirezhuthu_check,
+    uyirmei_ka_check,
+    uyirmei_ma_check,
+    uyirmei_na_check,
+    uyirmei_nga_check,
+    uyirmei_pa_check,
+    uyirmei_sa_check,
+    uyirmei_ta_check,
+    uyirmei_va_check,
+    uyirmei_ya_check,
+)
+
+
 
 # 1. பக்க வடிவமைப்பு
 st.set_page_config(
@@ -10,21 +26,21 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- நவீன வடிவமைப்பு (Custom CSS) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@400;700&display=swap');
-
+      
     /* ஒட்டுமொத்த பின்னணி மற்றும் எழுத்துரு */
     .stApp {
         background: linear-gradient(to bottom, #fdf2f8, #ffffff);
         font-family: 'Mukta Malar', sans-serif;
+        color: black !important;
     }
 
     /* தலைப்புப் பகுதி */
     .main-title-container {
         background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
-        color: white;
+        color: white !important;
         padding: 40px 20px;
         border-radius: 0px 0px 50px 50px;
         text-align: center;
@@ -59,8 +75,33 @@ st.markdown("""
         height: 50px;
         border-radius: 10px;
         font-weight: bold;
+        color: black !important;
     }
 
+    /* All text elements to black */
+    .stMarkdown, .stMarkdown p, .stMarkdown div, .stMarkdown span {
+        color: black !important;
+    }
+            
+    .stMarkdown h3 {
+        color: black !important;
+    }
+    
+    /* Subheader styling */
+    h2, h3, h4, h5, h6 {
+        color: black !important;
+    }
+    
+    /* Text input labels */
+    label, .stTextInput label {
+        color: black !important;
+    }
+    
+    /* Selectbox labels */
+    .stSelectbox label {
+        color: black !important;
+    }
+    
     /* இன்புட் மற்றும் பட்டன் வடிவமைப்பு */
     div.stButton > button {
         background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
@@ -76,6 +117,13 @@ st.markdown("""
         box-shadow: 0 5px 15px rgba(190, 24, 93, 0.4);
         transform: translateY(-2px);
     }
+    
+    /* Center align button */
+    div.stButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
     /* கார்டு வடிவமைப்பு */
     .result-card {
@@ -85,6 +133,7 @@ st.markdown("""
         border-left: 5px solid #ec4899;
         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         margin-top: 20px;
+        color: black !important;
     }
 
     .footer {
@@ -93,7 +142,7 @@ st.markdown("""
         background: #fff;
         border-radius: 30px 30px 0 0;
         margin-top: 60px;
-        color: #9d174d;
+        color: black !important;
         border-top: 1px solid #fce7f3;
     }
     </style>
@@ -109,7 +158,50 @@ st.markdown(f"""
         <p style="opacity: 0.9; font-size: 1.1rem;">Tolkapy Grammar Analysis Tool</p>
     </div>
     """, unsafe_allow_html=True)
-res = meymayakkam.meymayakkam1(word_m)
+
+
+def rule1(option,word_m):
+    all_rules = {
+    "மெய்ம்மயக்கம்1 : 'க்+க'":  meymayakkam1,
+    "மெய்ம்மயக்கம்2 : 'ங்+கங'":  meymayakkam2,
+    "மெய்ம்மயக்கம்3 : 'ச்+ச'":  meymayakkam3,
+    "மெய்ம்மயக்கம்4 : 'ஞ்+சஞய'":  meymayakkam4,
+    "மெய்ம்மயக்கம்5 : 'ட்+கசடப'":  meymayakkam5,
+    "மெய்ம்மயக்கம்6 : 'ண்+கசஞடணபமயவ'":  meymayakkam6,
+    "மெய்ம்மயக்கம்7 : 'த்+த'":  meymayakkam7,
+    "மெய்ம்மயக்கம்8 : 'ந்+தநய'":  meymayakkam8,
+    "மெய்ம்மயக்கம்9 : 'ப்+ப'":  meymayakkam9, 
+    "மெய்ம்மயக்கம்10 : 'ம்+பமயவ'":  meymayakkam10,
+    "மெய்ம்மயக்கம்11 : 'ய்+கசதபஞநமயவங'":  meymayakkam11,
+    "மெய்ம்மயக்கம்12 : 'ர்+கசதபஞநமயவங'":  meymayakkam12,
+    "மெய்ம்மயக்கம்13 : 'ழ்+கசதபஞநமயவங'":  meymayakkam13,
+    "மெய்ம்மயக்கம்14 : 'வ்+வ'":  meymayakkam14,
+    "மெய்ம்மயக்கம்15 : 'ல்+கசபலயவ'":  meymayakkam15,
+    "மெய்ம்மயக்கம்16 : 'ள்+கசபளயவ'":  meymayakkam16,
+    "மெய்ம்மயக்கம்17 : 'ற்+கசபற'":  meymayakkam17,
+    "மெய்ம்மயக்கம்18 : 'ன்+கசஞபமயவறன'":  meymayakkam18 
+    }
+    return all_rules[option](word_m)
+
+
+
+
+def word_starting_checker(option,word):
+    all_rules = {
+        "உயிர் வரிசை" :uyirezhuthu_check,
+        "க வரிசை" : uyirmei_ka_check,
+        "ச வரிசை" : uyirmei_sa_check,
+        "ஞ வரிசை" : uyirmei_nga_check,
+        "த வரிசை" : uyirmei_ta_check,
+        "ந வரிசை" : uyirmei_na_check,
+        "ப வரிசை" : uyirmei_sa_check,
+        "ம வரிசை" : uyirmei_ma_check,
+        "ய வரிசை" : uyirmei_ya_check,
+        "வ வரிசை" : uyirmei_va_check
+    }
+    return all_rules[option](word)
+
+
 # 3. பிரதான உள்ளடக்கப் பகுதி
 tab1, tab2, tab3, tab4 = st.tabs([
     "🧩 மெய்ம்மயக்கம்", 
@@ -124,27 +216,90 @@ def display_result(res, title="ஆய்வு முடிவு"):
 
 with tab1:
     st.subheader("மெய்ம்மயக்கம் ஆய்வு")
-    col1, col2 = st.columns([2, 1])
+    col1, col2,col3 = st.columns([2,2,2])
     with col1:
         word_m = st.text_input("சொல்லை உள்ளிடவும்:", key="m1", placeholder="எ.கா: கற்க")
+    
     with col2:
+        option = st.selectbox(  'விதியைத் தெரிவுசெய்க ',
+            (
+                "மெய்ம்மயக்கம்1 : 'க்+க'",
+                "மெய்ம்மயக்கம்2 : 'ங்+கங'",
+                "மெய்ம்மயக்கம்3 : 'ச்+ச'",
+                "மெய்ம்மயக்கம்4 : 'ஞ்+சஞய'",
+                "மெய்ம்மயக்கம்5 : 'ட்+கசடப'",
+                "மெய்ம்மயக்கம்6 : 'ண்+கசஞடணபமயவ'",
+                "மெய்ம்மயக்கம்7 : 'த்+த'",
+                "மெய்ம்மயக்கம்8 : 'ந்+தநய'",
+                "மெய்ம்மயக்கம்9 : 'ப்+ப'", 
+                "மெய்ம்மயக்கம்10 : 'ம்+பமயவ'",
+                "மெய்ம்மயக்கம்11 : 'ய்+கசதபஞநமயவங'",
+                "மெய்ம்மயக்கம்12 : 'ர்+கசதபஞநமயவங'",
+                "மெய்ம்மயக்கம்13 : 'ழ்+கசதபஞநமயவங'",
+                "மெய்ம்மயக்கம்14 : 'வ்+வ'",
+                "மெய்ம்மயக்கம்15 : 'ல்+கசபலயவ'",
+                "மெய்ம்மயக்கம்16 : 'ள்+கசபளயவ'",
+                "மெய்ம்மயக்கம்17 : 'ற்+கசபற'",
+                "மெய்ம்மயக்கம்18 : 'ன்+கசஞபமயவறன'", 
+                )
+            )
+    
+    with col3:
         st.write("##")
         btn1 = st.button("ஆராய்க", key="b1", use_container_width=True)
         
     if btn1:
-        display_result(res)
-    else:
-        st.error("இலக்கண விதியகம் (vidhikal.py) கண்டறியப்படவில்லை.")
+        if rule1:
+            rule_responce = rule1(option,word_m)
+            if rule_responce:
+                display_result(rule_responce)
+            else:
+                st.error(" இந்த விதியுடன் பொருந்தவில்லை. சரியான சொல்லை உள்ளிடவும். ")
+        else:
+            st.error("இலக்கண விதியகம் (vidhikal.py) கண்டறியப்படவில்லை.")
 
 with tab2:
-    st.subheader("மொழிமுதல் எழுத்து ஆய்வு")
+    st.subheader("மொழிமுதல் எழுத்து ஆய்வு") 
     word_f = st.text_input("சொல்லை உள்ளிடவும்:", key="f1", placeholder="எ.கா: தந்தை")
-    if st.button("சரிபார்", key="b2"):
-        if rules and hasattr(rules, 'mozhi_muthal_checker'):
-            res = rules.mozhi_muthal_checker(word_f)
-            display_result(res)
+    
+    col1, col2,col3 = st.columns([2,2,2])
+    with col1:
+        word_m = st.text_input("சொல்லை உள்ளிடவும்:", key="m1", placeholder="எ.கா: கற்க")
+    
+    with col2:
+        option = st.selectbox(  'விதியைத் தெரிவுசெய்க ',
+            (
+            "உயிர் வரிசை",
+            "க வரிசை",
+            "ச வரிசை",
+            "ஞ வரிசை",
+            "த வரிசை",
+            "ந வரிசை",
+            "ப வரிசை",
+            "ம வரிசை",
+            "ய வரிசை",
+            "வ வரிசை"  
+            )
+        )
+    with col3:
+        st.write("##")
+        btn1 = st.button("ஆராய்க", key="b1", use_container_width=True)
+        
+    if btn1:
+        if word_starting_checker:
+            rule_responce = word_starting_checker(option,word_m)
+            if rule_responce:
+                display_result(rule_responce)
+            else:
+                st.error(" இந்த விதியுடன் பொருந்தவில்லை. சரியான சொல்லை உள்ளிடவும். ")
         else:
-            st.warning("மொழிமுதல் ஆய்வுச் செயல்பாடு இன்னும் இணைக்கப்படவில்லை.")
+            st.error("இலக்கண விதியகம் (vidhikal.py) கண்டறியப்படவில்லை.")
+
+
+
+
+
+
 
 with tab3:
     st.subheader("மொழியிறுதி எழுத்து ஆய்வு")
@@ -178,3 +333,17 @@ st.markdown("""
         <p style="margin-top:5px;">தமிழ் இலக்கணத் தரவுத் தளம் | 2026</p>
     </div>
     """, unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
