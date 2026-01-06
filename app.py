@@ -18,6 +18,17 @@ from tamilrulepy.mozhimarabu.word_starting import (
 )
 
 
+from tamilrulepy.mozhimarabu.word_ending import (
+    uyir_check,
+    mellinam_check,
+    idaiyinam_check,
+    alapedai_check,
+    oorezhuthoorumozhi_check,
+    suttu_check,
+    vinaa_check,
+)
+
+from tamilrulepy.euphonic import get
 
 # 1. பக்க வடிவமைப்பு
 st.set_page_config(
@@ -194,12 +205,27 @@ def word_starting_checker(option,word):
         "ஞ வரிசை" : uyirmei_nga_check,
         "த வரிசை" : uyirmei_ta_check,
         "ந வரிசை" : uyirmei_na_check,
-        "ப வரிசை" : uyirmei_sa_check,
+        "ப வரிசை" : uyirmei_pa_check,
         "ம வரிசை" : uyirmei_ma_check,
         "ய வரிசை" : uyirmei_ya_check,
         "வ வரிசை" : uyirmei_va_check
     }
     return all_rules[option](word)
+
+
+
+def word_ending_checker(option,word):
+    all_rules = {
+    "uyir_check":uyir_check,
+    "mellinam_check":mellinam_check,
+    "idaiyinam_check":idaiyinam_check,
+    "alapedai_check":alapedai_check,
+    "oorezhuthoorumozhi_check":oorezhuthoorumozhi_check,
+    "suttu_check":suttu_check,
+    "vinaa_check":vinaa_check,
+    }
+    return all_rules[option](word)
+
 
 
 # 3. பிரதான உள்ளடக்கப் பகுதி
@@ -260,11 +286,10 @@ with tab1:
 
 with tab2:
     st.subheader("மொழிமுதல் எழுத்து ஆய்வு") 
-    word_f = st.text_input("சொல்லை உள்ளிடவும்:", key="f1", placeholder="எ.கா: தந்தை")
-    
+   
     col1, col2,col3 = st.columns([2,2,2])
     with col1:
-        word_m = st.text_input("சொல்லை உள்ளிடவும்:", key="m1", placeholder="எ.கா: கற்க")
+        word_m = st.text_input("சொல்லை உள்ளிடவும்:", key="m2", placeholder="எ.கா: கற்க")
     
     with col2:
         option = st.selectbox(  'விதியைத் தெரிவுசெய்க ',
@@ -280,10 +305,11 @@ with tab2:
             "ய வரிசை",
             "வ வரிசை"  
             )
+            
         )
     with col3:
         st.write("##")
-        btn1 = st.button("ஆராய்க", key="b1", use_container_width=True)
+        btn1 = st.button("ஆராய்க", key="b2", use_container_width=True)
         
     if btn1:
         if word_starting_checker:
@@ -303,13 +329,39 @@ with tab2:
 
 with tab3:
     st.subheader("மொழியிறுதி எழுத்து ஆய்வு")
-    word_e = st.text_input("சொல்லை உள்ளிடவும்:", key="e1", placeholder="எ.கா: மரம்")
-    if st.button("சரிபார்", key="b3"):
-        if rules and hasattr(rules, 'mozhi_iruthi_checker'):
-            res = rules.mozhi_iruthi_checker(word_e)
-            display_result(res)
+
+    col1, col2,col3 = st.columns([2,2,2])
+    with col1:
+        word_m = st.text_input("சொல்லை உள்ளிடவும்:", key="m3", placeholder="எ.கா: கற்க")
+    
+    with col2:
+        option = st.selectbox(  'விதியைத் தெரிவுசெய்க ',
+            (
+            "uyir_check",
+            "mellinam_check",
+            "idaiyinam_check",
+            "alapedai_check",
+            "oorezhuthoorumozhi_check",
+            "suttu_check",
+            "vinaa_check",
+            )
+        )
+    with col3:
+        st.write("##")
+        btn1 = st.button("ஆராய்க", key="b3", use_container_width=True)
+        
+    if btn1:
+        if word_ending_checker:
+            rule_responce = word_ending_checker(option,word_m)
+            if rule_responce:
+                display_result(rule_responce)
+            else:
+                st.error(" இந்த விதியுடன் பொருந்தவில்லை. சரியான சொல்லை உள்ளிடவும். ")
         else:
             st.warning("மொழியிறுதி ஆய்வுச் செயல்பாடு இன்னும் இணைக்கப்படவில்லை.")
+
+
+
 
 with tab4:
     st.subheader("புணர்ச்சி ஆய்வு (Sandhi Analysis)")
@@ -320,11 +372,15 @@ with tab4:
         v_mozhi = st.text_input("வருமொழி:", key="v1", placeholder="எ.கா: காய்")
     
     if st.button("புணர்க்க", key="b4"):
-        if rules and hasattr(rules, 'punarchi_checker'):
-            res = rules.punarchi_checker(n_mozhi, v_mozhi)
+        if get:
+            res = get([n_mozhi, v_mozhi])
             display_result(res, "புணர்ந்த வடிவம்")
         else:
             st.info(f"விதிகள் கிடைக்கவில்லை: {n_mozhi} + {v_mozhi}")
+
+
+
+
 
 # --- அடிக்குறிப்பு ---
 st.markdown("""
@@ -333,16 +389,6 @@ st.markdown("""
         <p style="margin-top:5px;">தமிழ் இலக்கணத் தரவுத் தளம் | 2026</p>
     </div>
     """, unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-
-
 
 
 
