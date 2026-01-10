@@ -35,7 +35,21 @@ st.set_page_config(
     page_title="தொல்காபை ஆய்வி", 
     page_icon="📜",
     layout="wide"
+    
 )
+
+hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+
+    .block-container {
+    padding-top: 0rem;
+    }
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 st.markdown("""
     <style>
@@ -44,18 +58,18 @@ st.markdown("""
     /* ஒட்டுமொத்த பின்னணி மற்றும் எழுத்துரு */
     .stApp {
         background: linear-gradient(to bottom, #fdf2f8, #ffffff);
-        font-family: 'Mukta Malar', sans-serif;
-        color: black !important;
+        font-family: 'Anek Tamil', sans-serif;
+        font-weight: semibold;
     }
 
     /* தலைப்புப் பகுதி */
     .main-title-container {
         background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
         color: white !important;
-        padding: 40px 20px;
-        border-radius: 0px 0px 50px 50px;
+        padding: 40px 30px;
+        border-radius: 50px 50px 50px 50px;
         text-align: center;
-        margin: -65px -20px 40px -20px;
+        margin: 20px -20px 50px -20px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     }
 
@@ -165,8 +179,8 @@ image_url = "https://raw.githubusercontent.com/neyakkoot/tolkapy-web-app/main/im
 st.markdown(f"""
     <div class="main-title-container">
         <img src="{image_url}" class="thol-image">
-        <h1 style="margin: 0; font-size: 2.5rem;">📜 தொல்காபை ஆய்வி</h1>
-        <p style="opacity: 0.9; font-size: 1.1rem;">Tolkapy Grammar Analysis Tool</p>
+        <h1 style="margin: 0; font-size: 2.5rem; color: #FFFFFF">📜 தொல்காபை ஆய்வி</h1>
+        <p style="opacity: 0.9; font-size: 1.1rem; color:#FFFFFF !important;">Tolkapy Grammar Analysis Tool</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -216,15 +230,20 @@ def word_starting_checker(option,word):
 
 def word_ending_checker(option,word):
     all_rules = {
-    "uyir_check":uyir_check,
-    "mellinam_check":mellinam_check,
-    "idaiyinam_check":idaiyinam_check,
-    "alapedai_check":alapedai_check,
-    "oorezhuthoorumozhi_check":oorezhuthoorumozhi_check,
-    "suttu_check":suttu_check,
-    "vinaa_check":vinaa_check,
+    "உயிர் சரிபார்ப்பு":uyir_check,
+    "மெல்லினம் சரிபார்ப்பு":mellinam_check,
+    "இடையினம் சரிபார்ப்பு":idaiyinam_check,
+    "அளபெடை சரிபார்ப்பு":alapedai_check,
+    "ஓரெழுத்து ஒருமொழி சரிபார்ப்பு":oorezhuthoorumozhi_check,
+    "சுட்டு சரிபார்ப்பு":suttu_check,
+    "வினா சரிபார்ப்பு":vinaa_check,
     }
     return all_rules[option](word)
+
+def punarchi_result_formatter(res):
+    if res:
+        res1 = res[0][0]
+    return res1
 
 
 
@@ -242,7 +261,7 @@ def display_result(res, title="ஆய்வு முடிவு"):
 
 with tab1:
     st.subheader("மெய்ம்மயக்கம் ஆய்வு")
-    col1, col2,col3 = st.columns([2,2,2])
+    col1, col2 = st.columns([2,2])
     with col1:
         word_m = st.text_input("சொல்லை உள்ளிடவும்:", key="m1", placeholder="எ.கா: கற்க")
     
@@ -270,24 +289,20 @@ with tab1:
                 )
             )
     
-    with col3:
-        st.write("##")
-        btn1 = st.button("ஆராய்க", key="b1", use_container_width=True)
+    st.write("##")
+    btn1 = st.button("ஆராய்க", key="b1")
         
     if btn1:
-        if rule1:
-            rule_responce = rule1(option,word_m)
-            if rule_responce:
-                display_result(rule_responce)
-            else:
-                st.error(" இந்த விதியுடன் பொருந்தவில்லை. சரியான சொல்லை உள்ளிடவும். ")
+        rule_responce = rule1(option,word_m)
+        if rule_responce:
+            display_result(rule_responce)
         else:
-            st.error("இலக்கண விதியகம் (vidhikal.py) கண்டறியப்படவில்லை.")
+            st.error(" இந்த விதியுடன் பொருந்தவில்லை. சரியான சொல்லை உள்ளிடவும். ")
 
 with tab2:
     st.subheader("மொழிமுதல் எழுத்து ஆய்வு") 
    
-    col1, col2,col3 = st.columns([2,2,2])
+    col1, col2 = st.columns([2,2])
     with col1:
         word_m = st.text_input("சொல்லை உள்ளிடவும்:", key="m2", placeholder="எ.கா: கற்க")
     
@@ -307,19 +322,15 @@ with tab2:
             )
             
         )
-    with col3:
-        st.write("##")
-        btn1 = st.button("ஆராய்க", key="b2", use_container_width=True)
+    st.write("##")
+    btn1 = st.button("ஆராய்க", key="b2")
         
     if btn1:
-        if word_starting_checker:
-            rule_responce = word_starting_checker(option,word_m)
-            if rule_responce:
-                display_result(rule_responce)
-            else:
-                st.error(" இந்த விதியுடன் பொருந்தவில்லை. சரியான சொல்லை உள்ளிடவும். ")
+        rule_responce = word_starting_checker(option,word_m)
+        if rule_responce:
+            display_result(rule_responce)
         else:
-            st.error("இலக்கண விதியகம் (vidhikal.py) கண்டறியப்படவில்லை.")
+            st.error(" இந்த விதியுடன் பொருந்தவில்லை. சரியான சொல்லை உள்ளிடவும். ")
 
 
 
@@ -330,25 +341,24 @@ with tab2:
 with tab3:
     st.subheader("மொழியிறுதி எழுத்து ஆய்வு")
 
-    col1, col2,col3 = st.columns([2,2,2])
+    col1, col2 = st.columns([2,2])
     with col1:
         word_m = st.text_input("சொல்லை உள்ளிடவும்:", key="m3", placeholder="எ.கா: கற்க")
     
     with col2:
         option = st.selectbox(  'விதியைத் தெரிவுசெய்க ',
             (
-            "uyir_check",
-            "mellinam_check",
-            "idaiyinam_check",
-            "alapedai_check",
-            "oorezhuthoorumozhi_check",
-            "suttu_check",
-            "vinaa_check",
+            "உயிர் சரிபார்ப்பு",
+            "மெல்லினம் சரிபார்ப்பு",
+            "இடையினம் சரிபார்ப்பு",
+            "அளபெடை சரிபார்ப்பு",
+            "ஓரெழுத்து ஒருமொழி சரிபார்ப்பு",
+            "சுட்டு சரிபார்ப்பு",
+            "வினா சரிபார்ப்பு",
             )
         )
-    with col3:
-        st.write("##")
-        btn1 = st.button("ஆராய்க", key="b3", use_container_width=True)
+    st.write("##")
+    btn1 = st.button("ஆராய்க", key="b3")
         
     if btn1:
         if word_ending_checker:
@@ -365,20 +375,43 @@ with tab3:
 
 with tab4:
     st.subheader("புணர்ச்சி ஆய்வு (Sandhi Analysis)")
-    c1, c2 = st.columns(2)
-    with c1:
-        n_mozhi = st.text_input("நிலைமொழி:", key="n1", placeholder="எ.கா: பனை")
-    with c2:
-        v_mozhi = st.text_input("வருமொழி:", key="v1", placeholder="எ.கா: காய்")
+
+    option = st.selectbox('எத்தனை சொற்கள் புணரப்படுகின்றன?', ('இரு சொற்கள்', 'மூன்று சொற்கள்'), key="sb1")
+
+    if option == 'இரு சொற்கள்':
     
-    if st.button("புணர்க்க", key="b4"):
-        if get:
-            res = get([n_mozhi, v_mozhi])
-            display_result(res, "புணர்ந்த வடிவம்")
-        else:
-            st.info(f"விதிகள் கிடைக்கவில்லை: {n_mozhi} + {v_mozhi}")
+        c1, c2 = st.columns(2)
+        with c1:
+            n_mozhi = st.text_input("நிலைமொழி:", key="n1", placeholder="எ.கா: பனை")
+        with c2:
+            v_mozhi = st.text_input("வருமொழி:", key="v1", placeholder="எ.கா: காய்")
+        
+        if st.button("புணர்க்க", key="b4"):
+            if get:
+                res = get([n_mozhi, v_mozhi])
+                res = punarchi_result_formatter(res)
+                display_result(res, "புணர்ந்த வடிவம்")
+            else:
+                st.info(f"விதிகள் கிடைக்கவில்லை: {n_mozhi} + {v_mozhi}")
 
-
+    elif option == 'மூன்று சொற்கள்':
+    
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            n_mozhi = st.text_input("நிலைமொழி:", key="nilai", placeholder="எ.கா: பனை")
+        with c2:
+            m_mozhi = st.text_input("இரண்டாம் நிலைமொழி:", key="nadu", placeholder="எ.கா: காய்")
+        with c3:
+            v_mozhi = st.text_input("வருமொழி:", key="varu", placeholder="எ.கா: பழம்")
+        
+        if st.button("புணர்க்க", key="b5"):
+            if get:
+                res1 = get([n_mozhi, m_mozhi, v_mozhi])
+                res1 = punarchi_result_formatter(res1)
+                if res1:
+                    display_result(res1, "புணர்ந்த வடிவம்")
+            else:
+                st.info(f"விதிகள் கிடைக்கவில்லை: {n_mozhi} + {m_mozhi} + {v_mozhi}")
 
 
 
