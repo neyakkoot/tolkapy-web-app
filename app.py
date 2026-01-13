@@ -420,7 +420,7 @@ st.markdown("""
     <div class="footer">
         <strong>மொழிவல்லுநர்:- முனைவர் சத்தியராசு தங்கச்சாமி</strong><br>
         <strong>தொழில்நுட்பவல்லுநர்:-  சு. பூபாலன், மு. வருண் & குழுவினர்</strong><br>
-        <p style="margin-top:5px;">தமிழ் இலக்கணத் தரவுத் தளம் | 2026</p>
+        <p style="margin-top:5px;">தொல்காப்பியம் உள்ளிட்ட தமிழ் இலக்கணத் தரவுத் தளம் | 2026</p>
     </div>
     """, unsafe_allow_html=True)
 
